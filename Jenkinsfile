@@ -6,7 +6,7 @@ pipeline {
                     steps {
                         echo "Hello"
                         sh 'python3 --version'
-                        sh ''
+                        sh 'shell.sh'
                     }
 
         }
