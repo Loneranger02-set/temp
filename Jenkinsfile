@@ -2,6 +2,10 @@ pipeline {
     agent any
     stages {
         stage('Checkout Repositories:') {
+                   agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-centos7-node16:node-16.18.0-npm-8.1.0-yarn-3.2.4' 
+                     reuseNode true 
+       } }
+
 
                     steps {
                         echo "Hello"
