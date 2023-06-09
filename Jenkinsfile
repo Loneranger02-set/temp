@@ -9,7 +9,6 @@ pipeline {
 
                     steps {
                         echo "Hello"
-                        sh 'python3 --version'
                         sh '''#!/usr/bin/env bash
                         # run build
                         echo "Info: Using node version: `node -v` and npm version: `npm -v` and yarn version: `yarn -v`"
