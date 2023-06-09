@@ -6,6 +6,7 @@ pipeline {
                     steps {
                         echo "Hello"
                         sh 'python3 --version'
+                        sh 'python3 install.py'
                     }
 
         }
