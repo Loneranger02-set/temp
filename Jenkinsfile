@@ -1,3 +1,5 @@
+def node_types
+
 pipeline {
     agent any
     stages {
