@@ -17,8 +17,8 @@ pipeline {
             set -e
 
             # ENVJS as template - ITOPS-139662
-            ENVJS_TEMPLATE="$WORKSPACE/itops/ansible/files/configs/containerised-spr-messenger-client-build-deploy/$ENV/environment.j2"
-            ENVJS_FILE="$WORKSPACE/itops/ansible/files/configs/containerised-spr-messenger-client-build-deploy/$ENV/environment.js"
+            ENVJS_TEMPLATE="$WORKSPACE/itops/ansible/files/configs/spr-template-preview/$ENV/environment.j2"
+            ENVJS_FILE="$WORKSPACE/itops/ansible/files/configs/spr-template-preview/$ENV/environment.js"
             ENVJS_DEST_FILE="$WORKSPACE/config/environment.js"
             if [[ -f "$ENVJS_TEMPLATE" ]]; then
             cd $WORKSPACE/itops/ansible
