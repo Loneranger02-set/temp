@@ -53,16 +53,16 @@ def checkout_itops_repo() {
                     userRemoteConfigs: [[url: env.ITOPS_MASTER_URL]]
                 ])
 }
-
-def checkout_template_repo() {
+def checkout_charts_repo() {
     checkout([
                     $class: 'GitSCM',
-                    branches: [[name: params.ANY_BRANCH]],
+                    branches: [[name: params.CHART_REPO_BRANCH]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [
-                        [$class: 'CloneOption', timeout: 20 ]
+                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'apps-charts']
                     ],
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: env.PREVIEW_TEMPLATE_MASTER_URL]]
+                    userRemoteConfigs: [[url: 'git@prod-gitlab.sprinklr.com:sprinklr-k8s/helm-charts.git']]
                 ])
 }
+
