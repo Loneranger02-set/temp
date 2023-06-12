@@ -15,27 +15,27 @@ pipeline {
                 }
             }
         }
-        stage('Checkout Repositories:') {
-                   agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-centos7-node16:node-16.18.0-npm-8.1.0-yarn-3.2.4' 
-                     reuseNode true 
-       } }
+//         stage('Checkout Repositories:') {
+//                    agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-centos7-node16:node-16.18.0-npm-8.1.0-yarn-3.2.4' 
+//                      reuseNode true 
+//        } }
 
 
-                    steps {
-                        echo "Hello"
-                        sh '''#!/usr/bin/env bash
-                        # run build
-                        echo "Info: Using node version: `node -v` and npm version: `npm -v` and yarn version: `yarn -v`"
-                        set -e
-                        SERVICE_DIR='packages/web'
+//                     steps {
+//                         echo "Hello"
+//                         sh '''#!/usr/bin/env bash
+//                         # run build
+//                         echo "Info: Using node version: `node -v` and npm version: `npm -v` and yarn version: `yarn -v`"
+//                         set -e
+//                         SERVICE_DIR='packages/web'
 
-                        cd $WORKSPACE
-                        rm -rf .npmrc
-                        cd $WORKSPACE/$SERVICE_DIR
-                        time yarn install'''
-                    }
+//                         cd $WORKSPACE
+//                         rm -rf .npmrc
+//                         cd $WORKSPACE/$SERVICE_DIR
+//                         time yarn install'''
+//                     }
 
-        }
+//         }
     
     }
 }
