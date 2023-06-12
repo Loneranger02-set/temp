@@ -1,44 +1,52 @@
-def node_types
-
 pipeline {
     agent any
     stages {
-        stage('code checkout') {
-            parallel {
-                stage('checkout charts repo') {
+        stage('Checkout Repositories:') {
+
                     steps {
-                        checkout_charts_repo()
-                    }
-                }
-                stage('checkout itops repo') {
-                    steps {
+                        deleteDir()
+                        checkout_template_repo()
                         checkout_itops_repo()
                     }
-                }
-            }
+
         }
-//         stage('Checkout Repositories:') {
-//                    agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-centos7-node16:node-16.18.0-npm-8.1.0-yarn-3.2.4' 
+    stage('Copy template files:') {
+      steps {
+        sh '''
+            echo "Info: Using node version: `node -v` and npm version: `npm -v` and yarn version: `yarn -v`"
+            set -e
+
+            # ENVJS as template - ITOPS-139662
+            ENVJS_TEMPLATE="$WORKSPACE/itops/ansible/files/configs/containerised-spr-messenger-client-build-deploy/$ENV/environment.j2"
+            ENVJS_FILE="$WORKSPACE/itops/ansible/files/configs/containerised-spr-messenger-client-build-deploy/$ENV/environment.js"
+            ENVJS_DEST_FILE="$WORKSPACE/config/environment.js"
+            if [[ -f "$ENVJS_TEMPLATE" ]]; then
+            cd $WORKSPACE/itops/ansible
+            ansible-playbook -i inventory/$ENV/hosts copy-template-file.yml -e "src_file=$ENVJS_TEMPLATE dest_file=$ENVJS_DEST_FILE"
+            else
+            cp $ENVJS_FILE $ENVJS_DEST_FILE
+            fi
+            '''
+      }
+    }
+//     stage('Run Install and Upload Steps:') {
+//        agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-rocky8-node10-18-1:node-10.18.1-npm-6.13.4-yarn-1.22.5' 
 //                      reuseNode true 
+//            args '-v /root/.npmrc:/root/.npmrc -v /etc/hosts:/etc/hosts'
 //        } }
-
-
-//                     steps {
-//                         echo "Hello"
-//                         sh '''#!/usr/bin/env bash
-//                         # run build
-//                         echo "Info: Using node version: `node -v` and npm version: `npm -v` and yarn version: `yarn -v`"
-//                         set -e
-//                         SERVICE_DIR='packages/web'
-
-//                         cd $WORKSPACE
-//                         rm -rf .npmrc
-//                         cd $WORKSPACE/$SERVICE_DIR
-//                         time yarn install'''
-//                     }
-
+//         steps {
+//             dir(env.WORKSPACE){
+//             sh 'npm -v'
+//             sh 'node -v'
+//             sh 'yarn -v'
+//             sh 'rm .npmrc'
+//             sh 'cat /root/.npmrc'
+//             sh 'time yarn install'
+//             sh 'time npm run publish-previews'
+//             }
+            
 //         }
-    
+//     }
     }
 }
 
@@ -55,16 +63,16 @@ def checkout_itops_repo() {
                     userRemoteConfigs: [[url: env.ITOPS_MASTER_URL]]
                 ])
 }
-def checkout_charts_repo() {
+
+def checkout_template_repo() {
     checkout([
                     $class: 'GitSCM',
-                    branches: [[name: params.CHART_REPO_BRANCH]],
+                    branches: [[name: params.ANY_BRANCH]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [
-                        [$class: 'RelativeTargetDirectory', relativeTargetDir: 'apps-charts']
+                        [$class: 'CloneOption', timeout: 20 ]
                     ],
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'git@prod-gitlab.sprinklr.com:sprinklr-k8s/helm-charts.git']]
+                    userRemoteConfigs: [[url: env.PREVIEW_TEMPLATE_MASTER_URL]]
                 ])
 }
-
