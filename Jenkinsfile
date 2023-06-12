@@ -1,6 +1,20 @@
 pipeline {
     agent any
     stages {
+        stage('code checkout') {
+            parallel {
+                stage('checkout charts repo') {
+                    steps {
+                        checkout_charts_repo()
+                    }
+                }
+                stage('checkout itops repo') {
+                    steps {
+                        checkout_itops_repo()
+                    }
+                }
+            }
+        }
         stage('Checkout Repositories:') {
                    agent  { docker { image 'prod-nexus.sprinklr.com:8123/spr-centos7-node16:node-16.18.0-npm-8.1.0-yarn-3.2.4' 
                      reuseNode true 
